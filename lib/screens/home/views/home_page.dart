@@ -8,6 +8,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return VerticalNavigation(
+      navigationBackgroundColor: Colors.grey,
       pages: [
         VerticalNavigationItem(page: Column(
           children: [

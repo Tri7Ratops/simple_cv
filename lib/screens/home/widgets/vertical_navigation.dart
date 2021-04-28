@@ -3,10 +3,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
+// ignore: must_be_immutable
 class VerticalNavigationItem extends Equatable {
   final Widget page;
   final Icon icon;
+  double visibilityPercentage = 0.0;
+  bool mostVisible = false;
 
   VerticalNavigationItem({required this.page, required this.icon});
 
@@ -14,6 +18,8 @@ class VerticalNavigationItem extends Equatable {
   List<Object?> get props => [
         page,
         icon,
+        visibilityPercentage,
+        mostVisible,
       ];
 }
 
@@ -22,8 +28,16 @@ class VerticalNavigation extends StatefulWidget {
   final double navigationWidth;
   final Color? focusedColor;
   final Color? unFocusedColor;
+  final Color? navigationBackgroundColor;
 
-  const VerticalNavigation({Key? key, required this.pages, this.navigationWidth = 75, this.focusedColor, this.unFocusedColor}) : super(key: key);
+  const VerticalNavigation({
+    Key? key,
+    required this.pages,
+    this.navigationWidth = 75,
+    this.focusedColor,
+    this.unFocusedColor,
+    this.navigationBackgroundColor,
+  }) : super(key: key);
 
   @override
   _VerticalNavigationState createState() => _VerticalNavigationState();
@@ -52,6 +66,22 @@ class _VerticalNavigationState extends State<VerticalNavigation> {
     );
   }
 
+  _defineMostVisiblePage() {
+    VerticalNavigationItem? tmp;
+
+    for (VerticalNavigationItem item in widget.pages) {
+      item.mostVisible = false;
+
+      if (tmp == null || item.visibilityPercentage > tmp.visibilityPercentage) {
+        tmp = item;
+      }
+    }
+    if (tmp != null) {
+      tmp.mostVisible = true;
+    }
+    setState(() {});
+  }
+
   Widget _getPagesColumn() {
     return Container(
       width: MediaQuery.of(context).size.width - widget.navigationWidth,
@@ -61,11 +91,19 @@ class _VerticalNavigationState extends State<VerticalNavigation> {
         scrollDirection: Axis.vertical,
         itemCount: widget.pages.length,
         itemBuilder: (context, index) {
-          return AutoScrollTag(
-            key: ValueKey(index),
-            controller: controller,
-            index: index,
-            child: widget.pages[index].page,
+          return VisibilityDetector(
+            key: Key('VisibilityDetector-$index'),
+            onVisibilityChanged: (visibilityInfo) {
+              setState(() => widget.pages[index].visibilityPercentage = visibilityInfo.visibleFraction * 100);
+              _defineMostVisiblePage();
+              debugPrint('Widget ${visibilityInfo.key} is ${visibilityInfo.visibleFraction * 100}% visible');
+            },
+            child: AutoScrollTag(
+              key: ValueKey(index),
+              controller: controller,
+              index: index,
+              child: widget.pages[index].page,
+            ),
           );
         },
       ),
@@ -73,27 +111,25 @@ class _VerticalNavigationState extends State<VerticalNavigation> {
   }
 
   Widget _getNavigationColumn(BuildContext context) {
-    List<Widget> items = [];
-
-    for (VerticalNavigationItem item in widget.pages) {
-      items.add(
-        IconButton(
-          icon: item.icon,
-          onPressed: () {
-            print("Scroll to ${widget.pages.indexOf(item)}");
-            controller.scrollToIndex(widget.pages.indexOf(item), preferPosition: AutoScrollPosition.begin);
-            controller.highlight(widget.pages.indexOf(item));
-          },
-        ),
-      );
-    }
-
     return Container(
       height: MediaQuery.of(context).size.height,
       width: widget.navigationWidth,
-      color: Colors.purple,
-      child: Column(
-        children: items,
+      color: widget.navigationBackgroundColor ?? Colors.purple,
+      child: ListView.builder(
+        scrollDirection: Axis.vertical,
+        itemCount: widget.pages.length,
+        itemBuilder: (context, index) {
+          return Container(
+            color: widget.pages[index].mostVisible ? Colors.white : widget.navigationBackgroundColor ?? Colors.purple,
+            child: IconButton(
+              icon: widget.pages[index].icon,
+              onPressed: () {
+                controller.scrollToIndex(index, preferPosition: AutoScrollPosition.begin);
+                controller.highlight(index);
+              },
+            ),
+          );
+        },
       ),
     );
   }
