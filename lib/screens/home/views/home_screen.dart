@@ -8,10 +8,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
-          child: HomePage(),
-        ),
+        body: HomePage(),
       ),
     );
   }
