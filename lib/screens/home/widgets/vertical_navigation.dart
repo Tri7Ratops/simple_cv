@@ -9,17 +9,30 @@ import 'package:visibility_detector/visibility_detector.dart';
 class VerticalNavigationItem extends Equatable {
   final Widget page;
   final Icon icon;
+  final String? iconTitle;
+  final Function()? onMostVisible;
+  final Function()? lostFocus;
+
   double visibilityPercentage = 0.0;
   bool mostVisible = false;
 
-  VerticalNavigationItem({required this.page, required this.icon});
+  VerticalNavigationItem({
+    required this.page,
+    required this.icon,
+    this.iconTitle,
+    this.onMostVisible,
+    this.lostFocus,
+  });
 
   @override
   List<Object?> get props => [
         page,
         icon,
+        iconTitle,
         visibilityPercentage,
         mostVisible,
+        onMostVisible,
+        lostFocus,
       ];
 }
 
@@ -53,6 +66,10 @@ class _VerticalNavigationState extends State<VerticalNavigation> {
       axis: Axis.vertical,
     );
 
+    if (widget.pages.length > 0) {
+      widget.pages[0].mostVisible = true;
+    }
+
     super.initState();
   }
 
@@ -67,19 +84,25 @@ class _VerticalNavigationState extends State<VerticalNavigation> {
   }
 
   _defineMostVisiblePage() {
-    VerticalNavigationItem? tmp;
+    VerticalNavigationItem? mostItemVisible;
+    VerticalNavigationItem? lastMostItemVisible;
 
     for (VerticalNavigationItem item in widget.pages) {
+      if (item.mostVisible) {
+        lastMostItemVisible = item;
+      }
       item.mostVisible = false;
 
-      if (tmp == null || item.visibilityPercentage > tmp.visibilityPercentage) {
-        tmp = item;
+      if (mostItemVisible == null || item.visibilityPercentage > mostItemVisible.visibilityPercentage) {
+        mostItemVisible = item;
       }
     }
-    if (tmp != null) {
-      tmp.mostVisible = true;
+    mostItemVisible?.mostVisible = true;
+    if (mostItemVisible != lastMostItemVisible) {
+      setState(() {});
+      lastMostItemVisible?.lostFocus?.call();
+      mostItemVisible?.onMostVisible?.call();
     }
-    setState(() {});
   }
 
   Widget _getPagesColumn() {
@@ -94,9 +117,8 @@ class _VerticalNavigationState extends State<VerticalNavigation> {
           return VisibilityDetector(
             key: Key('VisibilityDetector-$index'),
             onVisibilityChanged: (visibilityInfo) {
-              setState(() => widget.pages[index].visibilityPercentage = visibilityInfo.visibleFraction * 100);
+              widget.pages[index].visibilityPercentage = visibilityInfo.visibleFraction * 100;
               _defineMostVisiblePage();
-              debugPrint('Widget ${visibilityInfo.key} is ${visibilityInfo.visibleFraction * 100}% visible');
             },
             child: AutoScrollTag(
               key: ValueKey(index),
@@ -111,15 +133,40 @@ class _VerticalNavigationState extends State<VerticalNavigation> {
   }
 
   Widget _getNavigationColumn(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height,
-      width: widget.navigationWidth,
-      color: widget.navigationBackgroundColor ?? Colors.purple,
-      child: ListView.builder(
-        scrollDirection: Axis.vertical,
-        itemCount: widget.pages.length,
-        itemBuilder: (context, index) {
-          return Container(
+    List<Widget> list = [];
+
+    for (VerticalNavigationItem item in widget.pages) {
+      int index = widget.pages.indexOf(item);
+      if (item.mostVisible) {
+        list.add(
+          Expanded(
+            child: Container(
+              color: widget.pages[index].mostVisible ? Colors.white : widget.navigationBackgroundColor ?? Colors.purple,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    icon: widget.pages[index].icon,
+                    onPressed: () {
+                      controller.scrollToIndex(index, preferPosition: AutoScrollPosition.begin);
+                      controller.highlight(index);
+                    },
+                  ),
+                  RotatedBox(
+                    quarterTurns: 1,
+                    child: Text(
+                      item.iconTitle ?? "",
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      } else {
+        list.add(
+          Container(
             color: widget.pages[index].mostVisible ? Colors.white : widget.navigationBackgroundColor ?? Colors.purple,
             child: IconButton(
               icon: widget.pages[index].icon,
@@ -128,8 +175,18 @@ class _VerticalNavigationState extends State<VerticalNavigation> {
                 controller.highlight(index);
               },
             ),
-          );
-        },
+          ),
+        );
+      }
+    }
+
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      width: widget.navigationWidth,
+      color: widget.navigationBackgroundColor ?? Colors.purple,
+      child: Column(
+        children: list,
       ),
     );
   }
