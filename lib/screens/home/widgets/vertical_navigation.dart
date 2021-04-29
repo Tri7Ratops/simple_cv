@@ -140,40 +140,50 @@ class _VerticalNavigationState extends State<VerticalNavigation> {
       if (item.mostVisible) {
         list.add(
           Expanded(
-            child: Container(
-              color: widget.pages[index].mostVisible ? Colors.white : widget.navigationBackgroundColor ?? Colors.purple,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  IconButton(
-                    icon: widget.pages[index].icon,
-                    onPressed: () {
-                      controller.scrollToIndex(index, preferPosition: AutoScrollPosition.begin);
-                      controller.highlight(index);
-                    },
-                  ),
-                  RotatedBox(
-                    quarterTurns: 1,
-                    child: Text(
-                      item.iconTitle ?? "",
+            child: GestureDetector(
+              onTap: () {
+                controller.scrollToIndex(index, preferPosition: AutoScrollPosition.begin);
+                controller.highlight(index);
+              },
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                color: widget.pages[index].mostVisible ? Colors.white : widget.navigationBackgroundColor ?? Colors.purple,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    widget.pages[index].icon,
+                    SizedBox(
+                      height: 16,
                     ),
-                  )
-                ],
+                    Flexible(
+                      child: Container(
+                        child: RotatedBox(
+                          quarterTurns: 1,
+                          child: Text(
+                            item.iconTitle ?? "",
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
         );
       } else {
         list.add(
-          Container(
-            color: widget.pages[index].mostVisible ? Colors.white : widget.navigationBackgroundColor ?? Colors.purple,
-            child: IconButton(
-              icon: widget.pages[index].icon,
-              onPressed: () {
-                controller.scrollToIndex(index, preferPosition: AutoScrollPosition.begin);
-                controller.highlight(index);
-              },
+          GestureDetector(
+            onTap: () {
+              controller.scrollToIndex(index, preferPosition: AutoScrollPosition.begin);
+              controller.highlight(index);
+            },
+            child: Container(
+              padding: const EdgeInsets.all(10),
+              color: widget.pages[index].mostVisible ? Colors.white : widget.navigationBackgroundColor ?? Colors.purple,
+              child: widget.pages[index].icon,
             ),
           ),
         );
@@ -182,10 +192,11 @@ class _VerticalNavigationState extends State<VerticalNavigation> {
 
     return Container(
       height: MediaQuery.of(context).size.height,
-      padding: const EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.all(10),
       width: widget.navigationWidth,
       color: widget.navigationBackgroundColor ?? Colors.purple,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: list,
       ),
     );

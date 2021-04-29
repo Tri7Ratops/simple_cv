@@ -113,8 +113,8 @@ class HomePage extends StatelessWidget {
               Text("PAGE 2"),
             ],
           ),
-          icon: Icon(Icons.add),
-          iconTitle: "Ceci est un très long texte qu'il faut forcement gérer"
+          icon: Icon(Icons.add,),
+          iconTitle: "Ceci est un très long texte qu'il faut forcement gérer, vraiment très très long. Est-ce qu'une tarte à la créme en plus suffira ?"
         ),
         VerticalNavigationItem(
             page: Column(
