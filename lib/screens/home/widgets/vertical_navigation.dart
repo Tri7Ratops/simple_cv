@@ -52,12 +52,14 @@ class VerticalNavigation extends StatefulWidget {
   final double navigationWidth;
   final Color navigationBackgroundColor;
   final BoxDecoration decorationItem;
+  final bool reversed;
 
   VerticalNavigation({
     Key? key,
     required this.pages,
     this.navigationWidth = 75,
     this.navigationBackgroundColor = Colors.white10,
+    this.reversed = false,
     BoxDecoration? decoration,
   })  : decorationItem = decoration ?? BoxDecoration(),
         super(key: key);
@@ -88,6 +90,14 @@ class _VerticalNavigationState extends State<VerticalNavigation> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.reversed) {
+      return Row(
+        children: [
+          _getNavigationColumn(context),
+          _getPagesColumn(),
+        ],
+      );
+    }
     return Row(
       children: [
         _getPagesColumn(),
@@ -176,7 +186,7 @@ class _VerticalNavigationState extends State<VerticalNavigation> {
                     Flexible(
                       child: Container(
                         child: RotatedBox(
-                          quarterTurns: 1,
+                          quarterTurns: widget.reversed ? 3 : 1,
                           child: Text(
                             item.iconTitle ?? "",
                             overflow: TextOverflow.ellipsis,
