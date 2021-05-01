@@ -22,13 +22,18 @@ class HomePage extends StatelessWidget {
     );
   }
 
+  _navigate(int page) {
+    _controller.animateToPage(
+      page,
+      duration: Duration(milliseconds: 400),
+      curve: Curves.easeIn,
+    );
+  }
+
   Widget _getHeader() {
     return GestureDetector(
-      onTap: () => _controller.animateToPage(
-        1,
-        duration: Duration(seconds: 2),
-        curve: Curves.easeIn,
-      ),
+      onTap: () => _navigate(1),
+      onTapDown:  (_) => _navigate(1),
       child: Center(
         child: Image.asset("assets/logo.png"),
       ),
@@ -41,8 +46,14 @@ class HomePage extends StatelessWidget {
       pages: [
         VerticalNavigationItem(
           focusBackgroundColor: Colors.red,
-          page: ContentAboutMe(),
+          onTap: () => _navigate(0),
+          page: null,
           icon: Icons.home,
+        ),
+        VerticalNavigationItem(
+          focusBackgroundColor: Colors.red,
+          page: ContentAboutMe(),
+          icon: Icons.hotel,
           iconTitle: "Mes compétences".toUpperCase(),
         ),
         VerticalNavigationItem(

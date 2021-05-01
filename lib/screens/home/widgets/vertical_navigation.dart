@@ -7,11 +7,13 @@ import 'package:visibility_detector/visibility_detector.dart';
 
 // ignore: must_be_immutable
 class VerticalNavigationItem extends Equatable {
-  final Widget page;
+  final Widget? page;
   final IconData icon;
   final String? iconTitle;
+  final Function()? onTap;
   final Function()? onMostVisible;
   final Function()? lostFocus;
+  final Color defaultIconColor;
   final Color focusBackgroundColor;
   final Color focusIconColor;
   final Color focusTextColor;
@@ -25,6 +27,8 @@ class VerticalNavigationItem extends Equatable {
     this.iconTitle,
     this.onMostVisible,
     this.lostFocus,
+    this.onTap,
+    this.defaultIconColor = Colors.black,
     this.focusBackgroundColor = Colors.white,
     this.focusIconColor = Colors.black,
     this.focusTextColor = Colors.black,
@@ -47,7 +51,6 @@ class VerticalNavigation extends StatefulWidget {
   final List<VerticalNavigationItem> pages;
   final double navigationWidth;
   final Color navigationBackgroundColor;
-  final Color defaultIconColor;
   final BoxDecoration decorationItem;
 
   VerticalNavigation({
@@ -55,7 +58,6 @@ class VerticalNavigation extends StatefulWidget {
     required this.pages,
     this.navigationWidth = 75,
     this.navigationBackgroundColor = Colors.white10,
-    this.defaultIconColor = Colors.black,
     BoxDecoration? decoration,
   })  : decorationItem = decoration ?? BoxDecoration(),
         super(key: key);
@@ -74,8 +76,11 @@ class _VerticalNavigationState extends State<VerticalNavigation> {
       axis: Axis.vertical,
     );
 
-    if (widget.pages.length > 0) {
-      widget.pages[0].mostVisible = true;
+    for (VerticalNavigationItem item in widget.pages) {
+      if (item.page != null) {
+        item.mostVisible = true;
+        break;
+      }
     }
 
     super.initState();
@@ -101,12 +106,12 @@ class _VerticalNavigationState extends State<VerticalNavigation> {
       }
       item.mostVisible = false;
 
-      if (mostItemVisible == null || item.visibilityPercentage > mostItemVisible.visibilityPercentage) {
+      if (item.page != null && (mostItemVisible == null || item.visibilityPercentage > mostItemVisible.visibilityPercentage)) {
         mostItemVisible = item;
       }
     }
     mostItemVisible?.mostVisible = true;
-    if (mostItemVisible != lastMostItemVisible) {
+    if (mostItemVisible != lastMostItemVisible && this.mounted) {
       setState(() {});
       lastMostItemVisible?.lostFocus?.call();
       mostItemVisible?.onMostVisible?.call();
@@ -132,7 +137,7 @@ class _VerticalNavigationState extends State<VerticalNavigation> {
               key: ValueKey(index),
               controller: controller,
               index: index,
-              child: widget.pages[index].page,
+              child: widget.pages[index].page ?? Container(),
             ),
           );
         },
@@ -150,12 +155,13 @@ class _VerticalNavigationState extends State<VerticalNavigation> {
           Expanded(
             child: GestureDetector(
               onTap: () {
+                item.onTap?.call();
                 controller.scrollToIndex(index, preferPosition: AutoScrollPosition.begin);
                 controller.highlight(index);
               },
               child: Container(
                 padding: const EdgeInsets.all(10),
-                decoration: widget.decorationItem.copyWith(color: widget.pages[index].mostVisible ? item.focusBackgroundColor : widget.navigationBackgroundColor),
+                decoration: widget.decorationItem.copyWith(color: item.focusBackgroundColor),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -189,15 +195,16 @@ class _VerticalNavigationState extends State<VerticalNavigation> {
         list.add(
           GestureDetector(
             onTap: () {
+              item.onTap?.call();
               controller.scrollToIndex(index, preferPosition: AutoScrollPosition.begin);
               controller.highlight(index);
             },
             child: Container(
               padding: const EdgeInsets.all(10),
-              decoration: widget.decorationItem.copyWith(color: widget.pages[index].mostVisible ? Colors.white : widget.navigationBackgroundColor),
+              decoration: widget.decorationItem.copyWith(color: widget.navigationBackgroundColor),
               child: Icon(
                 widget.pages[index].icon,
-                color: widget.defaultIconColor,
+                color: item.defaultIconColor,
               ),
             ),
           ),
