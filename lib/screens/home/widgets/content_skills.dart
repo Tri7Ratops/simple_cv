@@ -1,0 +1,55 @@
+import 'package:flutter/cupertino.dart';
+
+class ContentSkills extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text("PAGE 3"),
+        Text("PAGE 3"),
+        Text("PAGE 3"),
+        Text("PAGE 3"),
+        Text("PAGE 3"),
+        Text("PAGE 3"),
+        Text("PAGE 3"),
+        Text("PAGE 3"),
+        Text("PAGE 3"),
+        Text("PAGE 3"),
+        Text("PAGE 3"),
+        Text("PAGE 3"),
+        Text("PAGE 3"),
+        Text("PAGE 3"),
+        Text("PAGE 3"),
+        Text("PAGE 3"),
+        Text("PAGE 3"),
+        Text("PAGE 3"),
+        Text("PAGE 3"),
+        Text("PAGE 3"),
+        Text("PAGE 3"),
+        Text("PAGE 3"),
+        Text("PAGE 3"),
+        Text("PAGE 3"),
+        Text("PAGE 3"),
+        Text("PAGE 3"),
+        Text("PAGE 3"),
+        Text("PAGE 3"),
+        Text("PAGE 3"),
+        Text("PAGE 3"),
+        Text("PAGE 3"),
+        Text("PAGE 3"),
+        Text("PAGE 3"),
+        Text("PAGE 3"),
+        Text("PAGE 3"),
+        Text("PAGE 3"),
+        Text("PAGE 3"),
+        Text("PAGE 3"),
+        Text("PAGE 3"),
+        Text("PAGE 3"),
+        Text("PAGE 3"),
+        Text("PAGE 3"),
+        Text("PAGE 3"),
+        Text("PAGE 3"),
+      ],
+    );
+  }
+}
