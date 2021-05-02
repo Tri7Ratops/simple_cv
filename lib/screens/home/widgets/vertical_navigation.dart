@@ -1,51 +1,10 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
+import 'package:simple_cv/screens/home/home.dart';
+import 'package:simple_cv/screens/home/widgets/vertical_navigation_item.dart';
 import 'package:visibility_detector/visibility_detector.dart';
-
-// ignore: must_be_immutable
-class VerticalNavigationItem extends Equatable {
-  final Widget? page;
-  final IconData icon;
-  final String? iconTitle;
-  final Function()? onTap;
-  final Function()? onMostVisible;
-  final Function()? lostFocus;
-  final Color defaultIconColor;
-  final Color focusBackgroundColor;
-  final Color focusIconColor;
-  final Color focusTextColor;
-
-  double visibilityPercentage = 0.0;
-  bool mostVisible = false;
-
-  VerticalNavigationItem({
-    required this.page,
-    required this.icon,
-    this.iconTitle,
-    this.onMostVisible,
-    this.lostFocus,
-    this.onTap,
-    this.defaultIconColor = Colors.black,
-    this.focusBackgroundColor = Colors.white,
-    this.focusIconColor = Colors.black,
-    this.focusTextColor = Colors.black,
-  });
-
-  @override
-  List<Object?> get props => [
-        page,
-        icon,
-        iconTitle,
-        visibilityPercentage,
-        mostVisible,
-        onMostVisible,
-        lostFocus,
-        focusBackgroundColor,
-      ];
-}
 
 class VerticalNavigation extends StatefulWidget {
   final List<VerticalNavigationItem> pages;
@@ -160,62 +119,36 @@ class _VerticalNavigationState extends State<VerticalNavigation> {
 
     for (VerticalNavigationItem item in widget.pages) {
       int index = widget.pages.indexOf(item);
+
       if (item.mostVisible) {
         list.add(
-          Expanded(
-            child: GestureDetector(
+          Flexible(
+            key: item.keyFlex,
+            child: VerticalNavigationFocusItem(
               onTap: () {
                 item.onTap?.call();
                 controller.scrollToIndex(index, preferPosition: AutoScrollPosition.begin);
                 controller.highlight(index);
               },
-              child: Container(
-                padding: const EdgeInsets.all(10),
-                decoration: widget.decorationItem.copyWith(color: item.focusBackgroundColor),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      widget.pages[index].icon,
-                      color: item.focusIconColor,
-                    ),
-                    SizedBox(
-                      height: 16,
-                    ),
-                    Flexible(
-                      child: Container(
-                        child: RotatedBox(
-                          quarterTurns: widget.reversed ? 3 : 1,
-                          child: Text(
-                            item.iconTitle ?? "",
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(color: item.focusTextColor),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              reversed: widget.reversed,
+              decoration: widget.decorationItem,
+              item: item,
             ),
           ),
         );
       } else {
         list.add(
-          GestureDetector(
-            onTap: () {
-              item.onTap?.call();
-              controller.scrollToIndex(index, preferPosition: AutoScrollPosition.begin);
-              controller.highlight(index);
-            },
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              decoration: widget.decorationItem.copyWith(color: widget.navigationBackgroundColor),
-              child: Icon(
-                widget.pages[index].icon,
-                color: item.defaultIconColor,
-              ),
+          Flexible(
+            key: item.keyFlex,
+            flex: 0,
+            child: VerticalNavigationDefaultItem(
+              decoration: widget.decorationItem,
+              onTap: () {
+                item.onTap?.call();
+                controller.scrollToIndex(index, preferPosition: AutoScrollPosition.begin);
+                controller.highlight(index);
+              },
+              item: item,
             ),
           ),
         );
