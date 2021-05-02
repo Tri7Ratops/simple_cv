@@ -17,7 +17,7 @@ class HomePage extends StatelessWidget {
       scrollDirection: Axis.vertical,
       children: [
         _getHeader(),
-        _getContent(),
+        _getContent(context),
       ],
     );
   }
@@ -40,30 +40,36 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _getContent() {
+  Widget _getContent(BuildContext context) {
     return VerticalNavigation(
-      navigationBackgroundColor: Colors.lightGreen,
+      navigationBackgroundColor: Theme.of(context).accentColor,
       pages: [
         VerticalNavigationItem(
-          focusBackgroundColor: Colors.red,
+          defaultIconColor: Colors.white,
           onTap: () => _navigate(0),
           page: null,
           icon: Icons.home,
         ),
         VerticalNavigationItem(
-          focusBackgroundColor: Colors.red,
+          defaultIconColor: Colors.white,
+          focusTextColor: Theme.of(context).primaryColor,
+          focusIconColor: Theme.of(context).primaryColor,
           page: ContentAboutMe(),
           icon: Icons.hotel,
           iconTitle: "Mes compétences".toUpperCase(),
         ),
         VerticalNavigationItem(
-          focusIconColor: Colors.green,
-          focusTextColor: Colors.greenAccent,
+          defaultIconColor: Colors.white,
+          focusTextColor: Theme.of(context).primaryColor,
+          focusIconColor: Theme.of(context).primaryColor,
           page: ContentExperiences(),
           icon: Icons.add,
           iconTitle: "Ceci est un très long texte qu'il faut forcement gérer, vraiment très très long. Est-ce qu'une tarte à la créme en plus suffira ?",
         ),
         VerticalNavigationItem(
+          defaultIconColor: Colors.white,
+          focusTextColor: Theme.of(context).primaryColor,
+          focusIconColor: Theme.of(context).primaryColor,
           page: ContentSkills(),
           icon: Icons.calendar_today,
         ),

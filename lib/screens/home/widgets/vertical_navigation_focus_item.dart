@@ -55,7 +55,10 @@ class _VerticalNavigationFocusItemState extends State<VerticalNavigationFocusIte
                     child: Text(
                       widget.item.iconTitle ?? "",
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(color: widget.item.focusTextColor),
+                      style: TextStyle(
+                        color: widget.item.focusTextColor,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
