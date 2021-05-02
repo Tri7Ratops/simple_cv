@@ -90,7 +90,6 @@ class _VerticalNavigationState extends State<VerticalNavigation> {
   Widget _getPagesColumn() {
     return Container(
       width: MediaQuery.of(context).size.width - widget.navigationWidth,
-      color: Colors.yellow,
       child: ListView.builder(
         controller: controller,
         scrollDirection: Axis.vertical,
