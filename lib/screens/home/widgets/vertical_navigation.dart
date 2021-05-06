@@ -12,12 +12,14 @@ class VerticalNavigation extends StatefulWidget {
   final Color navigationBackgroundColor;
   final BoxDecoration decorationItem;
   final bool reversed;
+  final EdgeInsets? padding;
 
   VerticalNavigation({
     Key? key,
     required this.pages,
     this.navigationWidth = 75,
     this.navigationBackgroundColor = Colors.white10,
+    this.padding,
     this.reversed = false,
     BoxDecoration? decoration,
   })  : decorationItem = decoration ?? BoxDecoration(),
@@ -91,6 +93,7 @@ class _VerticalNavigationState extends State<VerticalNavigation> {
     return Container(
       width: MediaQuery.of(context).size.width - widget.navigationWidth,
       child: ListView.builder(
+        padding: widget.padding,
         controller: controller,
         scrollDirection: Axis.vertical,
         itemCount: widget.pages.length,

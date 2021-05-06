@@ -42,6 +42,7 @@ class HomePage extends StatelessWidget {
 
   Widget _getContent(BuildContext context) {
     return VerticalNavigation(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       navigationBackgroundColor: Theme.of(context).accentColor,
       pages: [
         VerticalNavigationItem(
@@ -70,7 +71,7 @@ class HomePage extends StatelessWidget {
           defaultIconColor: Colors.white,
           focusTextColor: Theme.of(context).primaryColor,
           focusIconColor: Theme.of(context).primaryColor,
-          page: ContentSkills(),
+          page: ContentEducation(),
           icon: Icons.school_rounded,
           iconTitle: "Education".toUpperCase(),
         ),
@@ -81,14 +82,6 @@ class HomePage extends StatelessWidget {
           page: ContentSkills(),
           icon: Icons.trending_up,
           iconTitle: "Skills".toUpperCase(),
-        ),
-        VerticalNavigationItem(
-          defaultIconColor: Colors.white,
-          focusTextColor: Theme.of(context).primaryColor,
-          focusIconColor: Theme.of(context).primaryColor,
-          page: ContentSkills(),
-          icon: Icons.contact_mail_rounded,
-          iconTitle: "Contact".toUpperCase(),
         ),
       ],
     );

@@ -6,3 +6,4 @@ export 'vertical_navigation_default_item.dart';
 export 'vertical_navigation_focus_item.dart';
 export 'vertical_navigation_item.dart';
 export 'content_header.dart';
+export 'content_education.dart';

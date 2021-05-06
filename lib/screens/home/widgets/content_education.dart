@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 
 import 'content_header.dart';
 
-class ContentExperiences extends StatelessWidget {
+class ContentEducation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Column(
         children: [
           ContentHeader(
-            data: "Experience",
+            data: "Education",
           ),
           SizedBox(
             height: 32,
@@ -27,36 +27,36 @@ class ContentExperiences extends StatelessWidget {
   Widget _content(BuildContext context) {
     return Column(
       children: [
-        _experienceTile(
+        _educationTile(
           context: context,
-          title: "EXPERIENCE 1",
+          title: "School Name",
           desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
         ),
         SizedBox(
           height: 24,
         ),
-        _experienceTile(
+        _educationTile(
           context: context,
-          title: "EXPERIENCE 2",
+          title: "Another school name",
           desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
         ),
         SizedBox(
           height: 24,
         ),
-        _experienceTile(
+        _educationTile(
           context: context,
-          title: "EXPERIENCE 3",
+          title: "primary school name",
           desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
         ),
       ],
     );
   }
 
-  Widget _experienceTile({required BuildContext context, required String title, required String desc}) {
+  Widget _educationTile({required BuildContext context, required String title, required String desc}) {
     return Row(
       children: [
         Icon(
-          Icons.backpack_rounded,
+          Icons.school_rounded,
           size: 40,
         ),
         SizedBox(
