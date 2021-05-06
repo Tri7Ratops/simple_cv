@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:simple_cv/screens/home/home.dart';
 
 class ContentAboutMe extends StatelessWidget {
   @override
@@ -7,7 +8,9 @@ class ContentAboutMe extends StatelessWidget {
     return Container(
       child: Column(
         children: [
-          _header(context),
+          ContentHeader(
+            data: "About me",
+          ),
           SizedBox(
             height: 16,
           ),
@@ -16,20 +19,6 @@ class ContentAboutMe extends StatelessWidget {
             height: 50,
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _header(BuildContext context) {
-    return Container(
-      color: Theme.of(context).primaryColor,
-      width: double.infinity,
-      padding: const EdgeInsets.all(10),
-      child: Center(
-        child: Text(
-          "About me".toUpperCase(),
-          style: Theme.of(context).textTheme.headline5?.copyWith(color: Colors.white),
-        ),
       ),
     );
   }
